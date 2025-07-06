@@ -1,0 +1,27 @@
+<div id="chat">
+    <input type="text" id="messageInput">
+    <button onclick="sendMessage()">Send</button>
+    <ul id="messages"></ul>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+
+<script>
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl('/chatHub')
+    .build()
+    console.log('connection', connection)
+connection.on('ReceiveMessage', (user, message) => {
+    const li = document.createElement('li')
+    li.textContent = `${user}: ${message}`
+    document.getElementById('messages').appendChild(li)
+})
+connection.start().catch(err => console.error(err))
+
+function sendMessage() {
+    const user = "Ben Brackenbury"
+    const message = document.getElementById('messageInput').value
+    connection.invoke('SendMessage', user, message)
+        .catch(err => console.error(err))
+}
+</script>
