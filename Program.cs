@@ -9,10 +9,11 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // link to SignalR
-builder.Services.AddSignalR();
 app.MapHub<ChatHub>("/chathub");
 
 // Configure the HTTP request pipeline.
